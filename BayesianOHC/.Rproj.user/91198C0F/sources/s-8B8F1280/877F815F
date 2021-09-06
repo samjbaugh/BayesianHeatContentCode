@@ -1,0 +1,24 @@
+{
+    "id": "877F815F",
+    "path": "~/BayesianHeatContentCode/BayesianOHC/R/augment_data.R",
+    "project_path": "R/augment_data.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1630945921657.0,
+    "source_on_save": false,
+    "relative_order": 23,
+    "properties": {
+        "cursorPosition": "47,35",
+        "scrollLine": "42"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1630947110,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1630947110480,
+    "read_only": false,
+    "read_only_alternatives": []
+}

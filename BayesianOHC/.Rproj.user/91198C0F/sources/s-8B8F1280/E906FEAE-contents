@@ -1,0 +1,37 @@
+Package: BayesianOHC
+Type: Package
+Title: Non-stationary Gaussian Processes for Modeling Ocean Heat Content
+Version: 0.1.0
+Authors@R: 
+    person(given = "Samuel",
+           family = "Baugh",
+           role = c("aut", "cre"),
+           email = "samuelbaugh@ucla.edu")
+Maintainer: Samuel Baugh <samuelbaugh@ucla.edu>
+Description: Code to for fitting non-stationary Gaussian processes to spherical 
+    data where a cylindrical representation can be used; intended for quantying
+    ocean heat content from Argo floats however most functions are general and
+    can be applied to other datasets, particularly on the sphere. Non-stationarity 
+    is achieved in each parameter through kernel convolutions, where the parameters 
+    are allowed to vary flexibly over space. Gaussian hyper-prior surfaces are 
+    used for the  representation of the parameter fields. Any of the parameter 
+    fields can be  restricted to stationarity if desired. Code is provided for 
+    computing  cross-validation with two different metrics; the first computes 
+    validation scores by excluding a window of obversations around each point. 
+    The second, leave-one-float-out cross-validation, is intended for Argo data. 
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: 
+    ggplot2,
+    GPvecchia,
+    maptools,
+    Matrix,
+    methods,
+    RColorBrewer,
+    sf,
+    tmap,
+    verification
+Depends: 
+    R (>= 2.10)

@@ -1,0 +1,24 @@
+{
+    "id": "874E9D1C",
+    "path": "~/BayesianHeatContentCode/BayesianOHC/R/prediction_functions.R",
+    "project_path": "R/prediction_functions.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1630945096156.0,
+    "source_on_save": false,
+    "relative_order": 9,
+    "properties": {
+        "cursorPosition": "15,37",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1630945829,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1630945829861,
+    "read_only": false,
+    "read_only_alternatives": []
+}

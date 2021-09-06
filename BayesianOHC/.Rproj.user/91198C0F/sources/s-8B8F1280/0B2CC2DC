@@ -1,0 +1,24 @@
+{
+    "id": "0B2CC2DC",
+    "path": "~/BayesianHeatContentCode/BayesianOHC/R/convert_params_to_statiso.R",
+    "project_path": "R/convert_params_to_statiso.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1630945573440.0,
+    "source_on_save": false,
+    "relative_order": 19,
+    "properties": {
+        "cursorPosition": "5,29",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1630945586,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1630945586862,
+    "read_only": false,
+    "read_only_alternatives": []
+}

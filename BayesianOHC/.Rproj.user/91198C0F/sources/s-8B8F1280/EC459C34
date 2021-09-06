@@ -1,0 +1,21 @@
+{
+    "id": "EC459C34",
+    "path": "~/BayesianHeatContentCode/BayesianOHC/R/gen_masked_grid.R",
+    "project_path": "R/gen_masked_grid.R",
+    "type": "r_source",
+    "hash": "2780418763",
+    "contents": "",
+    "dirty": false,
+    "created": 1630945447219.0,
+    "source_on_save": false,
+    "relative_order": 15,
+    "properties": {},
+    "folds": "",
+    "lastKnownWriteTime": 1630944835,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1630944835,
+    "read_only": false,
+    "read_only_alternatives": []
+}
