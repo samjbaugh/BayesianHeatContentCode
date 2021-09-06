@@ -1,0 +1,8 @@
+This directory contains scripts for generating each of the figures in the 
+manuscript and in the supplementary material. Scripts are prefixed with
+"f0x" for Figure x in the main text and "s0x" for Figure x in the 
+supplementary material. Most scripts read in data included in the 
+repository. Scripts load the BayesianOHC and tidyverse packages in 
+the header, although these aren't necessarily needed in every script.
+All scripts have the option to be run in "test_mode" which does not
+overwrite existing figures. 

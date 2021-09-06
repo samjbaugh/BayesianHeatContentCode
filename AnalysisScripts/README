@@ -1,0 +1,189 @@
+Scripts are numbered roughly in the order they should be run to reproduce
+the full analysis, however the output of each script is saved included in the
+github repository so each script can be run independently of the others.
+
+Many scripts have the option to be run in "test_mode", 
+which will prevent output from over-writing previously saved data. Test mode
+may also run the script in a less computationally intensive fashion (for example
+using sub-sampling or generating fewer samples) so that the beahvior of the 
+script can be observed. 
+
+The descriptions below detail what each script does, which files
+it reads in, which files it writes to, and what the behavior of the script is when
+test_mode is set to TRUE. 
+
+These descriptions are also included in the header of each script. The header of each 
+script also loads the BayesianOHC package and tidyverse libraries, although these are
+not necessarily used in every script.
+
+# 00_init_system_data.R: 
+# Initializes system data for the BayesOHC package.
+# IN: RawData/mask.RData
+# OUT: BayesOHC/sysdata.rda
+# TEST: NA
+
+# 01_preprocess_argo_data.R
+# Reads in the raw Argo data file (which contains the temperatures,
+# pressures, and salinities  at each depth level) and computes numerical
+# integrals with  respect to depth to calculate the vertical ocean heat
+# content values at each latitude/longitude/time observation.
+# IN:  ../RawData/argo_object_01.RData
+# OUT: ../MCMC_Input/argo_data_january.RData
+# TEST: Does not save output
+
+# 02_get_initial_parameters.R
+# Calculates initial parameter fields by using a moving window approach where
+# MLEs are computed in a window around each gridcell, and then hyperparameter
+# surfaces are fit to the results. Code for Table 2 is at the end of the script.
+# IN:  ../MCMC_Input/argo_data_january.RData
+# OUT: ../MCMC_Input/knot_points.RData
+#      ../MCMC_Input/initial_parameters.RData
+# TEST: Does not save output, uses coarser grid for moving window calculations
+
+# 03_regional_vecchia_evaluations.R
+# Runs sampler on sub-regions of the data using the full Cholesky decomposition
+# and the Vecchia approximation with m={10,25,50,100}. Code for producing 
+# Table 1 is found at the end of the script.
+# IN: ../MCMC_Input/argo_data_january.RData
+#     ../MCMC_Input/initial_parameters.RData
+# OUT: Prints xtable object 
+# TEST: Computes predictions on coarser grid
+
+# 04_run_global_mcmc.R
+# Runs MCMC sampler for fully non-stationary cylindrical distance model
+# IN: ../MCMC_Input/argo_data_january.RData
+# OUT: Writes output to directory
+#       '../MCMC_Output/Output_run_label' where run_label can be customized;
+#       samples are stored in the "Samples" subdirectory and at the end MAP
+#       parameters/fields are determined and stored. Besides samples, includes 
+#       the following output:
+#             ../MCMC_Output/Output_run_label/map_configuration.RData
+#             ../MCMC_Output/Output_run_label/ohc_df.RData and 
+#             ../MCMC_Output/Output_run_label/mu_slope_df.RData 
+#       in the output directory
+# TEST: Runs sampler for a small number of iterations on a subset of the data/
+#       running in test mode will write output to directory suffixed with 
+#       "test_run".
+
+# 05_fit_stationary_models.R
+# Runs the MCMC sampler to fit models stationary in each of the parameter fields
+# for the cross validation study
+# IN: '../MCMC_Output/Output_20k_run/map_configuration.RData' (this is for
+#     initializing the sampler; can also be initialized from the last iteration
+#     of the full sampler or from some other configuration)
+# OUT: For each of the models fit, writes files of the name 
+#      map_params_<modelname>.RData in the ValidationData sub-directory
+#      containing the MAP parameters, fields, and veccmat objects
+# TEST: Runs the sampler for a fewer number of iterations on subsetted data
+
+# 06_extract_samples.R
+# Extracts samples from files in the MCMC_Output/Output../Samples
+# directory and converts them to matrix form
+# IN: Files in the directory '../MCMC_Output/Output_20k_run/Samples/'
+# OUT: '../MCMC_Output/Output_20k_run/sample_matrices.RData'
+# TEST: Does not overwrite data
+
+# 07_resample_trendfield.R
+# Obtains samples of the posterior distribution of the trend field by
+# resampling from the conditional posterior distributions at each iteration
+# IN: ../MCMC_Input/argo_data_january.RData
+#     ../MCMC_Output/Output_20k_run/sample_matrices.RData
+#     ../MCMC_Output/Output_20k_run/map_configuration.RData
+# OUT: ../MCMC_Output/Output_20k_run/trend_resampled.RData
+#     ../MCMC_Output/Output_20k_run/trend_resamp_intonly.RData
+# TEST: Does not overwrite data
+
+# 08_ohc_trend_posterior_intervals.R
+# Calculates posterior credible intervals for yearly ohc values and the
+# trend field
+# IN: ../MCMC_Output/Output_20k_run/ohc_df.RData
+#     ../MCMC_Output/Output_20k_run/mu_slope_df.RData
+# OUT: ../FigureScripts/FigureData/posterior_intervals.RData
+
+# 09_BayesianOHC_nonstat_chordal_fit.R
+# Fits fully nonstationary (but isotropic) chordal fit using BayesianOHC
+# IN: ../MCMC_Input/argo_data_january.RData
+#     ../MCMC_Input/grouping_list.RData
+#     ../MCMC_Output/Output_20k_run/map_configuration.RData
+# OUT: Run_sampler writes to directory ../MCMC_Output/Output_chordal_nonstat
+#      At the end MAP parameters for the cross validation study are stored in:
+#      ../ValidationData/map_sample_chordal_nonstat.RData
+# TEST: Does not overwrite data
+
+# 10_GpGp_stationary_chordal_fit.R
+# Fits fully stationary chordal distance model using the GpGp package. Also
+# converts fitted models into "cv_params" object that can be passed into
+# cross validation functions
+# IN: ../MCMC_Input/argo_data_january.RData
+# OUT: ../ValidationData/gpgp_chordal_modelfits.RData
+#      ../ValidationData/gpgp_chordal_cvparams.RData
+# TEST: Does not overwrite output
+
+# 11_GpGp_spacetime_fit.R
+# Fits fully stationary spacetime model using the GpGp package. Also
+# converts fitted models into "cv_params" object that can be passed into
+# cross validation functions
+# IN: ../MCMC_Input/argo_data_january.RData
+# OUT: ../ValidationData/gpgp_spacetime_modelfits.RData
+#      ../ValidationData/gpgp_spacetime_cvparams.RData
+# TEST: Does not overwrite output
+
+# 12_levitus_predictions.R
+# Uses the method described in Levitus et al. (2012) to produce ocean heat 
+# content anomalies to be used in cross validation, as well as predictions
+# of ocean heat content by year. Procedure is described in detail in the
+# comments. This scripts also compares trend posteriors with the
+# full BayesianOHC model fit to produce Table S1. 
+# IN: ../MCMC_Input/argo_data_january.RData
+#     ../MCMC_Output/Output_20k_run/trend_resamp_intonly.RData
+# OUT: ../ValidationData/levitus_anomalies.RData
+#      ../ValidationData/levitus_ohc.RData
+#      Also prints an xtable object corresponding to Table S1
+# TEST: Does not overwrite output
+
+# 13_compute_lofo_cv.R
+# Computes leave-one-float-out (LOFO) cross validation for each of the models.
+# Model names are 'fullmomdel', 'stat_phi', 'stat_theta_lat', 'stat_theta_lon',
+# 'stat_nugget', 'stat_all', 'chordal' (GpGp), 'spacetime' (GpGp), and 
+# 'chordal_nonstat'
+# IN: Reads the output for each model; see script for exact locations
+# OUT: For each model as named above saves an object of the form:
+#      ../ValidationData/lofodf_<model_name>.RData
+#      What is saved is a dataframe with fields "validval" and "validsd" for
+#      the cross-validation predicted values and standard deviations for
+#      each location
+# TEST: N/A, be careful this script will overwrite existing data
+
+# 14_compute_lowo_cv.R
+# Computes windowed cross validation (also leave-one-window-out or LOWO) on 
+# each of the models model names are 'fullmomdel', 'stat_phi', 'stat_theta_lat', 
+# 'stat_theta_lon', 'stat_nugget', 'stat_all', 'chordal' (GpGp), 
+# 'spacetime' (GpGp), and 'chordal_nonstat'
+# IN: Reads the output for each model; see script for exact locations
+# OUT: For each model as named above saves an object of the form:
+#      ../ValidationData/lowodf_<model_name>.RData
+#      What is saved is a dataframe with fields "validval" and "validsd" for
+#      the cross-validation predicted values and standard deviations for
+#      each location
+# TEST: N/A, be careful this script will overwrite existing data
+
+# 15_create_cv_tables.r
+# Creates LOFO and LOWO cross validation tables corresponding to Table 3 and
+# Table S2 respectively. Variable cv_type can be "lofo" or "lowo"
+# IN: For each model_name, files of the name
+#     ../ValidationData/lofodf_<model_name>.RData
+#     (and analogous for LOWO)
+# OUT: prints xtable object
+# TEST: N/A, does not save output
+
+# 16_cylindrical_simulations:
+# Runs the simulation study for comparing the accuracy of the exact
+# cylindrical convolutions versus the Gaussian approximation; see Section S3
+# in the supplementary materials for details. Most of the work is done in
+# the functions found in cylind_simulation_functions.R 
+# At the end of the scripts there is a suite of tests for verifying the accuracy 
+# of the convolutions and the approximation; by default these are not run.
+# IN: N/A
+# OUT: ../ValidationData/conv_test_simulations.RData
+# TEST: Does not overwrite existing data
+
