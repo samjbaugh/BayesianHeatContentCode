@@ -20,7 +20,8 @@ get_stationary_MLEs <- function(mydata,yearlist=2007:2016,verb=F,prior_list=NULL
                             est_nugget=F,est_mu=T,est_slope=T,iso=F)
 {
   myn=dim(mydata)[1]
-  start_value=c(-5,-5)
+  #non-isotropic case
+  start_value=c(-5,5)
   if(est_nugget)
   {
     start_value=c(start_value,-5)
@@ -29,7 +30,7 @@ get_stationary_MLEs <- function(mydata,yearlist=2007:2016,verb=F,prior_list=NULL
   }
 
   optfun=function(myparams,return_profiled=F) {
-    inputparams=c(myparams[1],myparams[2],
+    inputparams=c(myparams[1],ifelse(iso,myparams[1],myparams[2]),
                   ifelse(est_nugget,myparams[3],log(fixed_nugget)))
     retval = tryCatch({
       gp_profiled_stationary_likelihood(mydata,inputparams,
@@ -38,25 +39,32 @@ get_stationary_MLEs <- function(mydata,yearlist=2007:2016,verb=F,prior_list=NULL
                                         est_mu=est_mu,est_slope=est_slope,
                                         iso=iso)
     }, warning = function(w) {
-      return(-99999999)
+      return(-9e16)
     }, error = function(e) {
-      return(-99999999)
+      return(-9e16)
     })
     return(retval)
   }
   trace=ifelse(verb,6,0)
-  optobj=optim(par=start_value,fn=optfun,method="BFGS",
-               control=list(trace=trace,fnscale=-1)) #,control=list(maximize=T,info=T))
-  gpout=optfun(optobj$par,return_profiled=T)
-  if(iso){
-    optobj$par[2]=optobj$par[1]
+
+  if(iso & !est_nugget){
+    optobj=optimize(function(x) -optfun(x),lower=-20,upper=10) #
+    gpout=optfun(optobj$minimum,return_profiled=T)
+    retval=list("range"=exp(optobj$minimum),"nugget"=fixed_nugget,
+              "mu0"=gpout$mu0,"phi"=gpout$phi,slope=gpout$slope,
+              "likelihood"=-optobj$objective,"window_size"=length(mydata$z),
+              "data_mean"=mean(mydata$z),"data_var"=var(mydata$z))
+  }else{
+    optobj=optim(par=start_value,fn=optfun,method="BFGS",
+                 control=list(trace=trace,fnscale=-1)) #,control=list(maximize=T,info=T))
+    gpout=optfun(optobj$par,return_profiled=T)
+    retval=list("theta_lat"=exp(optobj$par)[1],"theta_lon"=exp(optobj$par)[2],
+                "nugget"=ifelse(est_nugget,exp(optobj$par)[3],fixed_nugget),
+                "mu0"=gpout$mu0,"phi"=gpout$phi,slope=gpout$slope,
+                "likelihood"=-optobj$value,"window_size"=length(mydata$z),
+                "data_mean"=mean(mydata$z),"data_var"=var(mydata$z))
   }
 
-  retval=list("theta_lat"=exp(optobj$par)[1],"theta_lon"=exp(optobj$par)[2],
-              "nugget"=ifelse(est_nugget,exp(optobj$par)[3],fixed_nugget),
-              "mu0"=gpout$mu0,"phi"=gpout$phi,slope=gpout$slope,
-              "likelihood"=-optobj$value,"window_size"=length(mydata$z),
-              "data_mean"=mean(mydata$z),"data_var"=var(mydata$z))
   # "liks"=gpout$liks,"priors"=gpout$priors)
   return(retval)
 }

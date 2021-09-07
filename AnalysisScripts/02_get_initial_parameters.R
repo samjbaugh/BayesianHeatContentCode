@@ -14,7 +14,9 @@ library(pbmcapply)
 
 load('../MCMC_Input/argo_data_january.RData',verb=T)
 knot_points=gen_masked_grid(latres=8,lonres=16)
-save(knot_points,file='../MCMC_Input/knot_points.RData')
+if(!testmode){
+  save(knot_points,file='../MCMC_Input/knot_points.RData')
+}
 
 verb=F
 
@@ -53,19 +55,25 @@ initparams=list(basis_fields=knot_points,
                 hyperparam_list=list(),
                 basis_mu=knot_points)
 
+linkfuns=list('phi'=exp,'nugget'=exp,
+                      'theta_lat'=exp,'theta_lon'=exp,
+                      'theta'=exp,'mu0'=identity,'slope'=identity)
+invlinkfuns=list('phi'=log,'nugget'=log,
+                         'theta_lat'=log,'theta_lon'=log,
+                         'theta'=log,'mu0'=identity,'slope'=identity)
+
 for(varname in c('theta_lat','theta_lon','nugget','phi')){
-  linkfun=default_linkfuns[[varname]]
-  invlinkfun=default_invlinkfuns[[varname]]
-  
-  moving_window_out_df$z=invlinkfun(moving_window_out_df[[varname]])
+  linkfun=linkfuns[[varname]]
+  invlinkfun=invlinkfuns[[varname]]
 
   #estimate stationary hyperparameters
   esthypers=get_stationary_MLEs(mydata=moving_window_out_df %>%
-                                  mutate(years=0),
+                                  mutate(years=0,
+                                         z=invlinkfun(moving_window_out_df[[varname]])),
                                 yearlist=c(0),est_mu=T,est_slope = F,
                                 est_nugget=F,iso=T)
 
-  range=esthypers$theta_lat
+  range=esthypers$range
   inithypers[[varname]]=list('range'=range,'mu'=esthypers$mu0,
                              'phi'=esthypers$phi,'nugget'=esthypers$nugget,
                              'theta_lat'=range,'theta_lon'=range)
@@ -74,7 +82,7 @@ for(varname in c('theta_lat','theta_lon','nugget','phi')){
     dplyr::select('lat_rad','lon_rad','lat_degrees','lon_degrees','z','obs') %>%
     rbind(knot_points %>% dplyr::select('lat_rad','lon_rad','lat_degrees','lon_degrees') %>%
             mutate('z'=NA,'obs'=F)) %>%
-    mutate(theta_lon=esthypers$theta_lon,theta_lat=esthypers$theta_lat,
+    mutate(theta_lon=esthypers$range,theta_lat=esthypers$range,
            phi=esthypers$phi,nugget=esthypers$nugget,mu=esthypers$mu0)
   preds=linkfun(krig_argo_field(to_krig_df,pred_indices=!to_krig_df$obs)$pred)
 
@@ -100,7 +108,7 @@ esthypers_slope=get_stationary_MLEs(mydata=moving_window_out_df %>%
                                    mutate(years=0),
                                  yearlist=c(0),est_mu=F,est_slope = F,
                                  est_nugget=F,iso=T)
-range=esthypers_slope$theta_lat
+range=esthypers_slope$range
 initparams$hyperparam_list[[varname]]=list('range'=range,'mu'=esthypers_slope$mu0,
                                            'phi'=esthypers_slope$phi,'nugget'=esthypers_slope$nugget,
                                            'theta_lat'=range,'theta_lon'=range)
@@ -116,17 +124,17 @@ initparams$hyperparam_list[[varname]]=
        'phi'=esthypers_mu$phi,'nugget'=esthypers_mu$nugget,
        'theta_lat'=range,'theta_lon'=range)
 
-varname_list=names(linkfuns)
-augdata_temp=augment_data(argo_data_ordered%>%mutate(mu0=0,slope=0),
+varname_list=c('phi','nugget','theta_lon','theta_lat','mu0','slope')
+augdata_temp=augment_data_parallel(argo_data_ordered%>%mutate(mu0=0,slope=0),
                           initparams,
                          varname_list[!(varname_list%in%c('mu0','slope'))],
-                         linkfuns)
+                         linkfuns,ncores=mycores)
 
-grouping_list=compute_grouping_list(augdata_temp,m=50)
-veccmat_list=build_veccmat_list_grouped(augdata_temp,grouping_list)
+grouping_list=compute_grouping_list(augdata_temp,m=50,ncores=mycores)
+veccmat_list=build_veccmat_list_grouped(augdata_temp,grouping_list,ncores=mycores)
 
 initparams=sample_mean_trend(augdata_temp,initparams,
-                             veccmat_list,yearlist = 2007:2016)
+                             veccmat_list,yearlist = 2007:2016,ncores=mycores)
 
 augdata_init=augment_data(augdata_temp,initparams,
                          c('mu0','slope'),linkfuns)
@@ -137,8 +145,10 @@ if(!testmode){
 }
 
 ###Table 2 Code:
+if(testmode){
+  load('../MCMC_Input/initial_parameters.RData',verb=T)
 
-load('../MCMC_Input/initial_parameters.RData',verb=T)
+}
 k1=do.call(rbind,lapply(initparams$hyperparam_list[1:4],
                         function(x) data.frame(range=convert_theta_lat_to_effective_range_deg(x$range),
                                                q16=qlnorm(.25,x$mu,sqrt(x$phi)),

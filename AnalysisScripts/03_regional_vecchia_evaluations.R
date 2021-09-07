@@ -1,10 +1,10 @@
 # 03_regional_vecchia_evaluations.R
 # Runs sampler on sub-regions of the data using the full Cholesky decomposition
-# and the Vecchia approximation with m={10,25,50,100}. Code for producing 
-# Table 1 is found at the end of the script.  
+# and the Vecchia approximation with m={10,25,50,100}. Code for producing
+# Table 1 is found at the end of the script.
 # IN: ../MCMC_Input/argo_data_january.RData
 #     ../MCMC_Input/initial_parameters.RData
-# OUT: Prints xtable object 
+# OUT: Prints xtable object
 # TEST: Computes predictions on coarser grid
 
 testmode=T
@@ -18,7 +18,7 @@ region_names=c("AtlN","PacNE","PacNW","AtlTrop","PacTropW","PacTropE",
                "Ind","PacSo","IndSo","AtlSo")
 test_mode=T
 if(test_mode){
-  M=100
+  M=10
   global_grid=gen_masked_grid(10,10)
 }else{
   M=1000

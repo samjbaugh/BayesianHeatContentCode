@@ -69,14 +69,13 @@ augment_data_parallel=function(pred_locs,myparams,
   stationary_varnames=names(myparams$stationary_params)
   nonstationary_varnames=varname_list[!(varname_list%in%stationary_varnames)]
 
-  ret_augdata[varname_list]=mclapply(varname_list,function(varname)
+  ret_augdata[nonstationary_varnames]=mclapply(nonstationary_varnames,function(varname)
     krig_basis_to_field(myparams,pred_locs,varname,linkfuns[[varname]]),
     mc.cores=ncores)
 
   for(varname in stationary_varnames){
     ret_augdata[[varname]]=myparams$stationary_params[[varname]]
   }
-
   if('theta'%in%varname_list){
     ret_augdata$theta_lat=ret_augdata$theta
     ret_augdata$theta_lon=ret_augdata$theta
@@ -85,7 +84,7 @@ augment_data_parallel=function(pred_locs,myparams,
   if(all(c('years','mu0','slope') %in% names(ret_augdata))){
     ret_augdata$mu=ret_augdata$mu0+
       (ret_augdata$years-2007)*ret_augdata$slope
-  }else{
+  }else if('mu0' %in% names(ret_augdata)){
     ret_augdata$mu=ret_augdata$mu0
   }
 

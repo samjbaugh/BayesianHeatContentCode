@@ -7,4 +7,4 @@ ValidationData/map*
 BayesianOHC_0.1.0.tar.gz
 BayesianOHC.Rcheck/*
 RawData/argo_object_01.RData
-
+MCMC_Output/Output_20k_run/trend_resampled.RData

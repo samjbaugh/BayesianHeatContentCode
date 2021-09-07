@@ -18,8 +18,8 @@ nresamp=100
 
 zalpha=qnorm(.975)
 full_resample=F
-#faster and should be more accurate to do second rather than 
-#fully resample 
+#faster and should be more accurate to do second rather than
+#fully resample
 if(full_resample){
   ohc_resampled=ohc_df %>%
     dplyr::filter(iter>burnin_iter)%>%
@@ -61,6 +61,6 @@ trend_intervals_df=mu_slope_df%>%
 
 if(!test_mode){
   save(ohc_intervals_df,trend_intervals_df,
-     file='../FigureScripts/FigureData/posterior_intervals.RData')
+     file='../MCMC_Output/Output_20k_run/posterior_intervals.RData')
 }
 

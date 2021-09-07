@@ -263,25 +263,25 @@ run_mcmc_sampler<-function(ordered_data,initparams,
     step_id=(ii-2)%%num_steps_per_iter + 1
 
     end_of_cycle=(step_id==(num_steps_per_iter))
-    myvarname=var_sample_order[step_id]
+    varname=var_sample_order[step_id]
 
     if(end_of_cycle)
     {
       print(tt)
     }
 
-    if(myvarname %in% c('theta','theta_lat','theta_lon','nugget','phi')) #update parameter fields
+    if(varname %in% c('theta','theta_lat','theta_lon','nugget','phi')) #update parameter fields
     {
-      basis_varname=paste('basis',myvarname,sep='_')
-      if(myvarname %in% stationary_varnames){
+      basis_varname=paste('basis',varname,sep='_')
+      if(varname %in% stationary_varnames){
         proposed_params=current_params
-        proposed_params$stationary_params[[myvarname]]=
-          linkfuns[[varname]](invlinkfuns[[varname]](current_params$stationary_params[[myvarname]])+
+        proposed_params$stationary_params[[varname]]=
+          linkfuns[[varname]](invlinkfuns[[varname]](current_params$stationary_params[[varname]])+
           rnorm(1,sd=variance_scaling_factor[[basis_varname]]))
         proposed_augdata=current_augdata
-        proposed_augdata[[myvarname]]=proposed_params$stationary_params[[myvarname]]
+        proposed_augdata[[varname]]=proposed_params$stationary_params[[varname]]
 
-        if(myvarname!='phi'){ #don't need to recreate veccmat for phi
+        if(varname!='phi'){ #don't need to recreate veccmat for phi
           proposed_veccmat_list=tryCatch(
             build_veccmat_list_grouped(proposed_augdata,grouping_list,
                                        corrfun=corrfun,ncores=ncores),
@@ -316,9 +316,9 @@ run_mcmc_sampler<-function(ordered_data,initparams,
           current_params$basis_fields[[basis_varname]]+
           rnorm(nbasis,sd=variance_scaling_factor[[basis_varname]])
         proposed_augdata=augment_data(current_augdata,proposed_params,
-                                      myvarname,linkfuns)
+                                      varname,linkfuns)
 
-        if(myvarname!='phi'){ #don't need to recreate veccmat for phi
+        if(varname!='phi'){ #don't need to recreate veccmat for phi
           proposed_veccmat_list=
             tryCatch(build_veccmat_list_grouped(proposed_augdata,grouping_list,
                                                 corrfun=corrfun,ncores=ncores),
@@ -360,7 +360,7 @@ run_mcmc_sampler<-function(ordered_data,initparams,
         }
       }
     }
-    }else if(myvarname%in%c('mu0','slope'))
+    }else if(varname%in%c('mu0','slope'))
     {
       sample_mean_out=sample_mean_trend(current_augdata,current_params,
                                         current_veccmat_list,
@@ -401,14 +401,15 @@ run_mcmc_sampler<-function(ordered_data,initparams,
                                      current_prior=current_prior,
                                      ii=ii,
                                      tt=tt,
-                                     myvarname=myvarname,
+                                     myvarname=varname,
                                      end_of_cycle=end_of_cycle)
     if(end_of_cycle){
-
-      print(paste('Recording'))
-      record_status(status_filename,tt,
-                    current_likelihood,current_prior,
-                    accepts,variance_scaling_factor,start_time)
+      if(!is.infinite(save_iter)){
+        print(paste('Recording'))
+        record_status(status_filename,tt,
+                      current_likelihood,current_prior,
+                      accepts,variance_scaling_factor,start_time)
+      }
     }
 
     if(do_predictions & end_of_cycle & (tt%%pred_iter==0)){
