@@ -1,4 +1,5 @@
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FDESCRIPTION="0785A956"
+~%2FBayesianHeatContentCode%2FBayesianOHC%2FLICENSE.md="810B06A0"
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FNAMESPACE="9421904F"
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FR%2Faugment_data.R="6D237D28"
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FR%2Fcompute_lincomb_predictions.R="F5FD0EFC"
@@ -22,3 +23,7 @@
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FR%2Fvalidation_functions.R="BF67287B"
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FR%2Fvecchia_likelihood_functions.R="0606ACAB"
 ~%2FBayesianHeatContentCode%2FBayesianOHC%2FR%2Fveccmat_functions.R="BD59F3A4"
+~%2FBayesianHeatContentCode%2FBayesianOHC%2FREADME.Rmd="6801AAA8"
+~%2FBayesianHeatContentCode%2FBayesianOHC%2FREADME.md="A40D0249"
+~%2FBayesianHeatContentCode%2FREADME="2E133107"
+~%2FBayesianHeatContentCode%2FREADME.md="1ED20138"

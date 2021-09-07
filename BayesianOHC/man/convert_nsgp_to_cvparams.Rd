@@ -12,13 +12,13 @@ convert_nsgp_to_cvparams(
 )
 }
 \arguments{
+\item{nsgp_vals}{Samples obtained from fitting a BayesNSGP model}
+
 \item{knot_points}{Knot points used in model fit}
 
 \item{argo_data_chord}{Argo data with 3D euclidean coordinates}
 
 \item{grouping_list}{List of groups to use}
-
-\item{nspg_vals}{Samples obtained from fitting a BayesNSGP model}
 }
 \description{
 Function to convert BayesNSGP samples to cv_params object

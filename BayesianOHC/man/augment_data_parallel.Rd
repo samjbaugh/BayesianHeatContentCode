@@ -15,7 +15,7 @@ augment_data_parallel(
 \arguments{
 \item{pred_locs}{Locations for kriging the parameter fields}
 
-\item{myparams}{Basis parameter values for kriging}
+\item{myparams}{Baosis parameter values for kriging}
 
 \item{varname_list}{List of parameter fields to krig}
 
