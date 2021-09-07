@@ -33,12 +33,15 @@ MCMC_Output: Output of the MCMC sampler for the fully non-stationary run. Includ
 	-posterior_intervals.RData
 	-sample_matrices.RData
 	-trend_resamp_intonly.RData
-	-trend_resampled.RData (not included due to large size)
+	-trend_resampled.RData*
 
 RawData: Unprocessed data; includes the following:
-	-argo_object_01.RData (not included due to large size)
+	-argo_object_01.RData*
 	-mask.RData
 
 ValidationData: Data used for the cross validation study in the paper. See the 
 	README in the AnalysisScripts folder to see where each file is generated
-	and used.
+	and used. lowodfs and map_params (which are large since they contain
+	veccmat objects) are not tracked in order to keep the size down.
+	
+(*) Files that are in .gitignore in order to keep the repository from being too large
