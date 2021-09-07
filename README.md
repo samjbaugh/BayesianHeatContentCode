@@ -3,6 +3,9 @@
 
 Code and data for "Hierarchical Bayesian Modeling of Ocean Heat Content and Its Uncertainty" which is under review at AOAS as of 9/7/21. Included is the source code and documentation for the BayeysianOHC package as well as scripts for reproducing the results, tables, and figures in the paper. Among other functionality this includes computing the initial configuration for the sampler, sampling the posterior distribution using  MCMC for either the full global model or for sub-regions, post-processing the posterior samples, fitting comparison models including replication of the Levitus et al. (2012) approach,  computing cross-validation scores, and evaluating the cylindrical distance convolutions. 
 
+The package can be installed by running the following R command:
+install_github('samjbaugh/BayesianHeatContentCode/BayesianOHC')
+
 In addition, the Argo data, initial configuration output, Vecchia approximation structures, 20,000 posterior samples for the main model fit, and data created in the course of the analysis are included. 
 
 This repository contains the following directories:
