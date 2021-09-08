@@ -8,7 +8,7 @@
 #     ../MCMC_Output/Output_20k_run/trend_resamp_intonly.RData
 # TEST: Does not overwrite data
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

@@ -5,7 +5,7 @@
 #     ../MCMC_Output/Output_20k_run/mu_slope_df.RData
 # OUT: ../FigureScripts/FigureData/posterior_intervals.RData
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

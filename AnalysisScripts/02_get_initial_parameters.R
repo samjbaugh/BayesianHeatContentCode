@@ -7,20 +7,20 @@
 #      ../MCMC_Input/initial_parameters.RData
 # TEST: Does not save output, uses coarser grid for moving window calculations
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 library(pbmcapply)
 
 load('../MCMC_Input/argo_data_january.RData',verb=T)
 knot_points=gen_masked_grid(latres=8,lonres=16)
-if(!testmode){
+if(!test_mode){
   save(knot_points,file='../MCMC_Input/knot_points.RData')
 }
 
 verb=F
 
-if(testmode){
+if(test_mode){
   param_grid=gen_masked_grid(latres=24,lonres=24)
 }else{
   param_grid=gen_masked_grid(latres=6,lonres=6)
@@ -139,15 +139,14 @@ initparams=sample_mean_trend(augdata_temp,initparams,
 augdata_init=augment_data(augdata_temp,initparams,
                          c('mu0','slope'),linkfuns)
 
-if(!testmode){
+if(!test_mode){
   save(initparams,augdata_init,
        file='../MCMC_Input/initial_parameters.RData')
 }
 
 ###Table 2 Code:
-if(testmode){
+if(!test_mode){
   load('../MCMC_Input/initial_parameters.RData',verb=T)
-
 }
 k1=do.call(rbind,lapply(initparams$hyperparam_list[1:4],
                         function(x) data.frame(range=convert_theta_lat_to_effective_range_deg(x$range),

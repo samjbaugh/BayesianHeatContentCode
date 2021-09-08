@@ -8,7 +8,7 @@
 #      ../ValidationData/map_sample_chordal_nonstat.RData
 # TEST: Does not overwrite data
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

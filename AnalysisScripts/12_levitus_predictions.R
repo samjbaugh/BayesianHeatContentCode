@@ -26,7 +26,7 @@
 #     sigmaA=sigma0*sqrt(sum((w_i/W)^2)+2*sum(sum(wiwj))) where sigma0 is the
 #     empirical standard deviation of the "corrected" values
 #     within the influence region
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 library(geodist)
@@ -54,7 +54,7 @@ argo_data_levitus_anoms=argo_data_ordered%>%
   mutate(sd=ifelse(is.na(sd),mean(vhc_obs),sd))%>%
   mutate(z=vhc_obs-mu0)
 
-if(!testmode){
+if(!test_mode){
   save(argo_data_levitus_anoms,gridmeans,
        file='../ValidationData/levitus_anomalies.RData')
 }

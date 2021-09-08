@@ -14,7 +14,7 @@
 #       running in test mode will write output to directory suffixed with 
 #       "test_run".
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

@@ -7,7 +7,7 @@
 # OUT: Prints xtable object
 # TEST: Computes predictions on coarser grid
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

@@ -9,7 +9,7 @@
 # OUT: ../ValidationData/conv_test_simulations.RData
 # TEST: Does not overwrite existing data
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 
@@ -29,7 +29,7 @@ stationary_simulations=
 nonstationary_simulations=
   cylind_approx_simulation(true_range_seq,rangefun_nonstat,nrep,locs)
 
-if(!testmode){
+if(!test_mode){
   save(stationary_simulations,nonstationary_simulations,
        file='../ValidationData/conv_test_simulations.RData')
 }

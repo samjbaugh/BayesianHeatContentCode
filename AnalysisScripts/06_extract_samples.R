@@ -5,7 +5,7 @@
 # OUT: '../MCMC_Output/Output_20k_run/sample_matrices.RData'
 # TEST: Does not overwrite data
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

@@ -7,7 +7,7 @@
 #      ../ValidationData/gpgp_spacetime_cvparams.RData
 # TEST: Does not overwrite output
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 

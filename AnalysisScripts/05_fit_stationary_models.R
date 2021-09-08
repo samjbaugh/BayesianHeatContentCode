@@ -9,7 +9,7 @@
 #      containing the MAP parameters, fields, and veccmat objects
 # TEST: Runs the sampler for a fewer number of iterations on subsetted data
 
-testmode=T
+test_mode=T
 library(tidyverse)
 library(BayesianOHC)
 
@@ -19,7 +19,7 @@ myncores=5
 m=50
 
 if(test_mode){
-  M=10
+  M=2
   load('../MCMC_Input/argodata_subset.RData',verb=T)
   ordered_data=argo_data_subset
 }else{
