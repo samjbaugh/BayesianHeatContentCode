@@ -11,7 +11,7 @@
 #      each location
 # TEST: N/A, be careful this script will overwrite existing data
 
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 cv_type='lofo'

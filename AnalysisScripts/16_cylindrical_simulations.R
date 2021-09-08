@@ -10,7 +10,7 @@
 # TEST: Does not overwrite existing data
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 rangefun_stat=function(x) rep(x,nlocs)

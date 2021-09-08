@@ -6,7 +6,7 @@
 # TEST: Does not overwrite data
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 sampledir=paste('../MCMC_Output/Output_20k_run/Samples/',sep='')

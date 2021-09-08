@@ -27,7 +27,7 @@
 #     empirical standard deviation of the "corrected" values
 #     within the influence region
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 library(geodist)
 

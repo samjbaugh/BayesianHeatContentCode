@@ -8,7 +8,7 @@
 # TEST: Computes predictions on coarser grid
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 load('../MCMC_Input/argo_data_january.RData',verb=T)

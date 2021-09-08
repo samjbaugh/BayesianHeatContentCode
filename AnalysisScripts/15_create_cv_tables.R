@@ -7,7 +7,7 @@
 # OUT: prints xtable object
 # TEST: N/A, does not save output
 
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 library(xtable)
 library(verification)

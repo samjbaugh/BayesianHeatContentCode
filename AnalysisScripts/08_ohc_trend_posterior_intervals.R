@@ -6,7 +6,7 @@
 # OUT: ../FigureScripts/FigureData/posterior_intervals.RData
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 load(file='../MCMC_Output/Output_20k_run/ohc_df.RData',verb=T)

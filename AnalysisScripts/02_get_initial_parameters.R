@@ -8,7 +8,7 @@
 # TEST: Does not save output, uses coarser grid for moving window calculations
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 library(pbmcapply)
 

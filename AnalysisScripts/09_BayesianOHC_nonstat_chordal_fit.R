@@ -9,7 +9,7 @@
 # TEST: Does not overwrite data
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 myncores=5

@@ -10,7 +10,7 @@
 # TEST: Runs the sampler for a fewer number of iterations on subsetted data
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 #use map configuration from full run for initialization:

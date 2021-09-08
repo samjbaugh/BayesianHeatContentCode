@@ -44,7 +44,6 @@
 #' @return Returns the last M-save_iter samples, or all M samples if
 #' save_iter>M. If save_iter<M, earlier samples are stored every save_iter
 #' iterations in the directory yspecified by outdir
-#' @import GPvecchia
 #' @importFrom parallel mclapply
 #' @export
 run_mcmc_sampler<-function(ordered_data,initparams,

@@ -15,7 +15,7 @@
 #       "test_run".
 
 test_mode=T
-library(tidyverse)
+library(dplyr)
 library(BayesianOHC)
 
 myncores=5
