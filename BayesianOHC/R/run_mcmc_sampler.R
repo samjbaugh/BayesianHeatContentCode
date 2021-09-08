@@ -135,13 +135,13 @@ run_mcmc_sampler<-function(ordered_data,initparams,
   nonstat_indices=which(!(varname_list%in%stationary_varnames |
                             varname_list%in%c('mu0','slope')))
   calc_prior<-function(myparams){
-    return(-sum(myparams$basis_fields[,basis_varname_list[nonstat_indices]]^2)/2-
-      sum(myparams$basis_mu[,basis_varname_list[mu_indices]]^2)/2-
-      ifelse(length(stationary_varnames)>0,
-             sum(sapply(stationary_varnames,
-                        function(vv) (invlinkfuns[[vv]](myparams$stationary_params[[vv]])-
-                                        myparams$hyperparam_list[[vv]]$mu)^2/
-                          (2*sqrt(myparams$hyperparam_list[[vv]]$phi)))),0))
+    return(-sum(unlist(c(myparams$basis_fields[,basis_varname_list[nonstat_indices]]^2,0)))/2-
+             sum(unlist(c(myparams$basis_mu[,basis_varname_list[mu_indices]]^2,0)))/2-
+             ifelse(length(stationary_varnames)>0,
+                    sum(unlist(c(sapply(stationary_varnames,
+                                        function(vv) (invlinkfuns[[vv]](myparams$stationary_params[[vv]])-
+                                                        myparams$hyperparam_list[[vv]]$mu)^2/
+                                          (2*sqrt(myparams$hyperparam_list[[vv]]$phi)))),0)),0))
   }
 
   ############Load Initial Configuration###############
