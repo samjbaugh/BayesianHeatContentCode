@@ -51,7 +51,7 @@ argo_data_levitus_anoms=argo_data_ordered%>%
   left_join(gridmeans%>%dplyr::select('lat_round','lon_round','mu0','sd'),
             c('lat_round','lon_round'))%>%
   mutate(mu0=ifelse(is.na(mu0),mean(vhc_obs),mu0))%>%
-  mutate(sd=ifelse(is.na(sd),mean(vhc_obs),sd))%>%
+  mutate(sd=ifelse(is.na(sd),sd(vhc_obs),sd))%>%
   mutate(z=vhc_obs-mu0)
 
 if(!test_mode){
@@ -68,7 +68,7 @@ obspred_df=bind_rows(argo_data_ordered%>%mutate(obs=T),
             c('lat_round','lon_round'))%>%
   dplyr::filter(!is.na(mu0))%>%
   mutate(mu0=ifelse(is.na(mu0),mean(vhc_obs,na.rm=T),mu0))%>%
-  mutate(sd=ifelse(is.na(sd),mean(vhc_obs),sd))%>%
+  mutate(sd=ifelse(is.na(sd),sd(vhc_obs),sd))%>%
   mutate(z=vhc_obs-mu0)
 
 ohcdf_list=list()
