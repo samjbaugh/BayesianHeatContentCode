@@ -148,20 +148,20 @@ if(!test_mode){
 if(!test_mode){
   load('../MCMC_Input/initial_parameters.RData',verb=T)
 }
-k1=do.call(rbind,lapply(initparams$hyperparam_list[1:4],
+k1=do.call(rbind,lapply(paramdat$hyperparam_list[1:4],
                         function(x) data.frame(range=convert_theta_lat_to_effective_range_deg(x$range),
-                                               q16=qlnorm(.25,x$mu,sqrt(x$phi)),
-                                               mu_norm=exp(x$mu),
-                                               q84=qlnorm(.75,x$mu,sqrt(x$phi)))))
+                                               q25=qlnorm(.25,x$mu,sqrt(x$phi)),
+                                               q50=qlnorm(.5,x$mu,sqrt(x$phi)),
+                                               q75=qlnorm(.75,x$mu,sqrt(x$phi)))))
 k1['phi',-c(1)]=sqrt(k1['phi',-c(1)])
 k1['theta_lat',-c(1)]=convert_theta_lat_to_effective_range_deg(k1['theta_lat',-c(1)])
 k1['theta_lon',-c(1)]=convert_theta_lat_to_effective_range_deg(k1['theta_lon',-c(1)])
 
-k2=do.call(rbind,lapply(initparams$hyperparam_list[5:6],function(x) data.frame(
+k2=do.call(rbind,lapply(paramdat$hyperparam_list[5:6],function(x) data.frame(
   range=convert_theta_lat_to_effective_range_deg(x$range),
-  q16=qnorm(.25,x$mu,sqrt(x$phi)),
-  mu_norm=x$mu,
-  q84=qnorm(.75,x$mu,sqrt(x$phi)))))
+  q25=qnorm(.25,x$mu,sqrt(x$phi)),
+  q50=qnorm(.5,x$mu,sqrt(x$phi)),
+  q75=qnorm(.75,x$mu,sqrt(x$phi)))))
 kk=rbind(k1,k2) %>% cbind(data.frame(varname=rownames(.)),.)
 Table2=kk %>% mutate(Dist=c(rep("Log-Normal",4),rep("Normal",2))) %>%
   mutate(units=c("Degrees","Degrees","Unitless","GJ/m2","GJ/m2","GJ/(m2year)"))
